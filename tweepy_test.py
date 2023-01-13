@@ -15,10 +15,4 @@ api = tweepy.API(auth)
 # Search for tweets from a specific location (Morocco)
 tweets = tweepy.Cursor(api.search_tweets,q= "#crypto", geocode="31.7917,-7.0926,300km", lang="en").items(1000)
 
-# Save the tweets to a JSON file
-with open("tweets.json", "w") as f:
-    for tweet in tweets:
-        json.dump(tweet._json, f)
-        f.write("\n")
-
-print("Tweets saved to tweets.json")
+# get the first tweet out of tweets
