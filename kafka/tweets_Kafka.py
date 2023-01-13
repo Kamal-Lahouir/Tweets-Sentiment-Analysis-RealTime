@@ -29,5 +29,8 @@ myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
 # Start streaming tweets
+# List of hashtags to track
+hashtags = ["#Crypto", "#Cryptocurrency", "#"]
+
 myStream.filter(locations=[-17.1278, 21.4153, -1.1533, 37.0922])
 
