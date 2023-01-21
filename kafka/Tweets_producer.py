@@ -10,19 +10,23 @@ access_token_secret = "C0Jyhr0kgEPvJ15EobeE20cLwLcqnk7OqgFZukwWLw5fN"
 # Kafka topic name
 topic_name = "tweets"
 
-# Authentication and connection to Twitter API
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
 
-# Kafka producer
-producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0,11,5))
+class MyStreamListener(tweepy.Stream(consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_token_secret=access_token_secret)):
 
-class MyStreamListener(tweepy.Stream):
+    _kafka_producer = None
+
+    def __init__(self):
+        self._kafka_producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0,11,5))
+
     def on_status(self, status):
         # Send tweet to Kafka topic
-        producer.send(topic_name, status.text.encode())
+        self._kafka_producer.send(topic_name, status.text.encode())
         print(status.text)
+    
+    def on_error(self, status_code):
+        print("Encountered streaming error (", status_code, ")")
+        return False
+
 
 
 
@@ -32,8 +36,16 @@ hashtags = ["#Crypto", "#Cryptocurrency", "#"]
 
 if __name__ == "__main__":
     # Create a stream object
+
+    # Authentication and connection to Twitter API
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+
+    # Kafka producer
+
     myStreamListener = MyStreamListener()
     myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
     myStream.filter(track=hashtags,locations=[-17.1278, 21.4153, -1.1533, 37.0922],stall_warnings=True)
-    producer.flush()
+    myStreamListener._kafka_producer.flush()
 
