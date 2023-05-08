@@ -7,9 +7,9 @@ This project aims to stream tweets in real-time using Kafka, perform sentiment a
 - Stream real-time tweets using Kafka (debugging)  
 - Perform sentiment analysis on the tweets using Spark NLP library  
 - Store the results in CSVs  
-" Display the results in real-time on a Flask web application (in-progress)  
-" View sentiment analysis results using a user-friendly interface (in-progress)  
-" Visualize sentiment analysis results with charts and graphs (in-progress)  
+- Display the results in real-time on a Flask web application (in-progress)  
+- View sentiment analysis results using a user-friendly interface (in-progress)  
+- Visualize sentiment analysis results with charts and graphs (in-progress)  
 - Ability to monitor streaming and processing performance (in-progress)  
   
 ## Technologies Used  
